@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Torus } from '@react-three/drei';
 
 const SpinningTorus = () => {
-  const ref = useRef<any>();
+  const ref = useRef<any>(null);  // ← added null
 
   useFrame(() => {
     if (ref.current) {
