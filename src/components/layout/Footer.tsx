@@ -27,18 +27,18 @@ const Footer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }} // ← Smoother easing
       viewport={{ once: true, amount: 0.3 }} // ← Triggers when 30% visible
-      className="bg-gradient-to-b from-gray-900 to-black text-gray-300 py-10 border-t border-gray-800"
+      className="bg-gradient-to-b from-blue-gray-900 to-blue-gray-800 text-blue-gray-300 py-10 border-t border-blue-gray-700"
     >
       <div className="container mx-auto px-6 text-center">
         {/* Main copyright line – elegant silver text */}
         <p className="text-lg font-light tracking-wide">
-          © {new Date().getFullYear()} Argentum. All rights reserved.
-          <span className="ml-2 text-sm text-gray-500">Los Angeles, CA</span>
+          © {new Date().getFullYear()} Fulxerpro. All rights reserved.
+          <span className="ml-2 text-sm text-blue-gray-500">Your Future, Amplified.</span>
         </p>
 
         {/* Subtle tagline for premium feel */}
-        <p className="mt-2 text-sm text-gray-500 italic">
-          Elevated Wealth Management • Secure • Global
+        <p className="mt-2 text-sm text-blue-gray-500 italic">
+          Unlock Wealth Growth • Secure • Innovative
         </p>
 
         {/* Social links with stagger & hover animation */}
@@ -52,7 +52,7 @@ const Footer = () => {
           <motion.a
             variants={itemVariants}
             whileHover="hover"
-            href="https://facebook.com/argentum"
+            href="https://facebook.com/fulxerpro"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors duration-300"
@@ -64,7 +64,7 @@ const Footer = () => {
           <motion.a
             variants={itemVariants}
             whileHover="hover"
-            href="https://twitter.com/argentum"
+            href="https://twitter.com/fulxerpro"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors duration-300"
@@ -76,7 +76,7 @@ const Footer = () => {
           <motion.a
             variants={itemVariants}
             whileHover="hover"
-            href="https://linkedin.com/company/argentum"
+            href="https://linkedin.com/company/fulxerpro"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors duration-300"
