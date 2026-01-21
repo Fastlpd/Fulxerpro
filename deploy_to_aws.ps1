@@ -1,6 +1,10 @@
 # This script automates the audit, build, deployment to AWS S3 + CloudFront, and Git operations for the Fulxerpro frontend project.
 
 #region Parameters
+param (
+    [string]$CloudFrontDistributionId = ""
+)
+
 $projectDir = "C:\Users\Remzy\fulxerpro"
 $s3BucketName = "fulxerpro-frontend"
 $apiGatewayUrl = "https://0bsy5p2yqk.execute-api.us-east-1.amazonaws.com/prod/api"
@@ -103,31 +107,29 @@ Invoke-CheckedCommand "aws s3 sync ./dist s3://$s3BucketName --region $region --
 #region Step 6: Create a CloudFront invalidation for /*
 Write-Host "--- Step 6: Creating CloudFront invalidation ---"
 
-# Get CloudFront Distribution ID for the S3 bucket
-# This requires a separate lookup. Assuming the bucket is directly associated with a CF distribution.
-# This part is a placeholder and might need manual lookup or a more robust way to find the distribution ID.
-# For simplicity, we assume there's one CF distribution associated with the S3 bucket or user provides it.
-# A more robust solution would list distributions and filter by origin domain name.
-Write-Host "Attempting to find CloudFront Distribution ID for S3 bucket '$s3BucketName'..."
-try {
-    $distributionId = (aws cloudfront list-distributions --query "DistributionList.Items[?Origins.Items[?S3OriginConfig.OriginAccessIdentity].DomainName=='$($s3BucketName).s3.$($region).amazonaws.com'].Id | [0]" --output text --region $region)
-    if (-not $distributionId) {
-        $distributionId = (aws cloudfront list-distributions --query "DistributionList.Items[?Origins.Items[?DomainName=='$($s3BucketName).s3.$($region).amazonaws.com'].Id | [0]" --output text --region $region)
+$actualDistributionId = $CloudFrontDistributionId
+if ([string]::IsNullOrEmpty($actualDistributionId)) {
+    Write-Host "Attempting to find CloudFront Distribution ID for S3 bucket '$s3BucketName'..."
+    try {
+        $actualDistributionId = (aws cloudfront list-distributions --query "DistributionList.Items[?Origins.Items[?S3OriginConfig.OriginAccessIdentity].DomainName=='$($s3BucketName).s3.$($region).amazonaws.com'].Id | [0]" --output text --region $region)
+        if ([string]::IsNullOrEmpty($actualDistributionId)) {
+            $actualDistributionId = (aws cloudfront list-distributions --query "DistributionList.Items[?Origins.Items[?DomainName=='$($s3BucketName).s3.$($region).amazonaws.com'].Id | [0]" --output text --region $region)
+        }
     }
-    if ([string]::IsNullOrEmpty($distributionId)) {
-        Write-Warning "Could not automatically determine CloudFront Distribution ID for S3 bucket '$s3BucketName'. Skipping CloudFront invalidation."
-        $cloudFrontInvalidationSkipped = $true
-    } else {
-        Write-Host "Found CloudFront Distribution ID: $distributionId"
-        Invoke-CheckedCommand "aws cloudfront create-invalidation --distribution-id $distributionId --paths '/*' --region $region" `
-            "Failed to create CloudFront invalidation." `
-            "Successfully created CloudFront invalidation for '/*'."
-        $cloudFrontInvalidationSkipped = $false
+    catch {
+        Write-Warning "Error while trying to automatically determine CloudFront Distribution ID: $($_.Exception.Message)"
     }
 }
-catch {
-    Write-Error "Error finding CloudFront Distribution ID or creating invalidation: $($_.Exception.Message)"
+
+if ([string]::IsNullOrEmpty($actualDistributionId)) {
+    Write-Warning "CloudFront Distribution ID not found or provided. Skipping CloudFront invalidation."
     $cloudFrontInvalidationSkipped = $true
+} else {
+    Write-Host "Using CloudFront Distribution ID: $actualDistributionId"
+    Invoke-CheckedCommand "aws cloudfront create-invalidation --distribution-id $actualDistributionId --paths '/*' --region $region" `
+        "Failed to create CloudFront invalidation." `
+        "Successfully created CloudFront invalidation for '/*'."
+    $cloudFrontInvalidationSkipped = $false
 }
 #endregion
 
@@ -135,7 +137,7 @@ catch {
 Write-Host "--- Step 7: Providing access endpoints ---"
 if (-not $cloudFrontInvalidationSkipped) {
     try {
-        $cloudFrontDomainName = (aws cloudfront get-distribution --id $distributionId --query "Distribution.DomainName" --output text --region $region)
+        $cloudFrontDomainName = (aws cloudfront get-distribution --id $actualDistributionId --query "Distribution.DomainName" --output text --region $region)
         if (-not [string]::IsNullOrEmpty($cloudFrontDomainName)) {
             Write-Host "CloudFront Domain Name (for testing): https://$cloudFrontDomainName"
         }
