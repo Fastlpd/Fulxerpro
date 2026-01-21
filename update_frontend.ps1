@@ -31,43 +31,35 @@ catch {
 }
 
 # Run npm run build
-try {
-    npm run build -ErrorAction Stop
-    Write-Host "Successfully built the frontend."
-}
-catch {
+npm run build
+if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to build the frontend. Please make sure Node.js and npm are installed and the project dependencies are installed."
     exit 1
 }
+Write-Host "Successfully built the frontend."
 
 # Git add .env and any changed files
-try {
-    git add . -ErrorAction Stop
-    Write-Host "Successfully added files to the staging area."
-}
-catch {
+git add .
+if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to add files to the staging area. Please make sure git is installed and you are in a git repository."
     exit 1
 }
+Write-Host "Successfully added files to the staging area."
 
 # Git commit
-try {
-    git commit -m "$commitMessage" -ErrorAction Stop
-    Write-Host "Successfully committed the changes."
-}
-catch {
+git commit -m "$commitMessage"
+if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to commit the changes."
     exit 1
 }
+Write-Host "Successfully committed the changes."
 
 # Git push
-try {
-    git push origin main -ErrorAction Stop
-    Write-Host "Successfully pushed the changes to the main branch."
-}
-catch {
+git push origin main
+if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to push the changes. Please make sure you have the correct permissions and the remote repository is configured correctly."
     exit 1
 }
+Write-Host "Successfully pushed the changes to the main branch."
 
 Write-Host "Successfully updated the frontend project."
