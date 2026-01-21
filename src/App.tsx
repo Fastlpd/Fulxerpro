@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Lenis from 'lenis';
-import Features from './components/Features';
+import Features from './components/sections/Features';
 import Scene from './components/canvas/Scene';
 
 function App() {
