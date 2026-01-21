@@ -44,34 +44,43 @@ const Features = () => {
         </motion.h2>
 
         <div className="grid md:grid-cols-3 gap-12">
+          {/* Feature 1 */}
           <motion.div
             className="bg-gray-800/50 backdrop-blur-md p-10 rounded-3xl border border-gray-700 hover:border-purple-500/50 transition-all duration-300 shadow-xl hover:shadow-purple-500/20"
             variants={featureVariants}
           >
             <FiTrendingUp className="text-6xl text-purple-400 mb-6 mx-auto" />
-            <h3 className="text-2xl font-bold mb-4 text-white text-center">Real-time Analytics</h3>
+            <h3 className="text-2xl font-bold mb-4 text-white text-center">
+              Real-time Analytics
+            </h3>
             <p className="text-gray-300 text-center">
-              Stay ahead of the market with up-to-the-second data and powerful insights from Los Angeles.
+              Stay ahead of the market with up-to-the-second data and powerful insights.
             </p>
           </motion.div>
 
+          {/* Feature 2 */}
           <motion.div
             className="bg-gray-800/50 backdrop-blur-md p-10 rounded-3xl border border-gray-700 hover:border-pink-500/50 transition-all duration-300 shadow-xl hover:shadow-pink-500/20"
             variants={featureVariants}
           >
             <FiLock className="text-6xl text-pink-500 mb-6 mx-auto" />
-            <h3 className="text-2xl font-bold mb-4 text-white text-center">Bank-Grade Security</h3>
+            <h3 className="text-2xl font-bold mb-4 text-white text-center">
+              Bank-Grade Security
+            </h3>
             <p className="text-gray-300 text-center">
               Your investments and data are protected with world-class security protocols.
             </p>
           </motion.div>
 
+          {/* Feature 3 */}
           <motion.div
             className="bg-gray-800/50 backdrop-blur-md p-10 rounded-3xl border border-gray-700 hover:border-purple-500/50 transition-all duration-300 shadow-xl hover:shadow-purple-500/20"
             variants={featureVariants}
           >
             <FiBarChart2 className="text-6xl text-purple-400 mb-6 mx-auto" />
-            <h3 className="text-2xl font-bold mb-4 text-white text-center">Customizable Dashboards</h3>
+            <h3 className="text-2xl font-bold mb-4 text-white text-center">
+              Customizable Dashboards
+            </h3>
             <p className="text-gray-300 text-center">
               Tailor your workspace to focus on the metrics and markets that matter most to you.
             </p>
