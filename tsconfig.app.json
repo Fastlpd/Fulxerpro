@@ -5,7 +5,7 @@
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "types": ["vite/client", "node", "three", "@types/three", "@react-three/fiber", "@react-three/drei"],
+    "types": ["vite/client", "node", "three", "@react-three/fiber", "@react-three/drei"],
     "skipLibCheck": true,
     /* Bundler mode */
     "moduleResolution": "bundler",
