@@ -1,4 +1,6 @@
 import { motion, type Variants } from 'framer-motion';
+import Starfield from '../canvas/Starfield';
+import './Hero.css';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -26,60 +28,60 @@ const itemVariants: Variants = {
 
 const Hero = () => {
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-gray-900 via-blue-gray-900 to-black text-white overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,rgba(59,130,246,0.3)_0%,transparent_50%)]" />
-        <div className="absolute bottom-0 right-0 bg-[radial-gradient(circle_at_80%_90%,rgba(192,192,192,0.2)_0%,transparent_60%)] h-1/2 w-1/2" />
+    <section id="hero" className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(124,58,237,0.1),_transparent_50%),radial-gradient(circle_at_top_left,_rgba(56,189,248,0.08),_transparent_40%),radial-gradient(circle_at_bottom_right,_rgba(34,197,94,0.08),_transparent_40%)]" />
+        <Starfield />
       </div>
 
-      {/* The 3D scene could be placed here as an absolute positioned element */}
-      {/* <div className="absolute inset-0 z-0">
-        <Canvas>
-          <Scene />
-        </Canvas>
-      </div> */}
-
-      <motion.div 
+      <motion.div
         className="container mx-auto px-6 relative z-10 text-center"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
       >
+        <motion.div
+          variants={itemVariants}
+          className="inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-500/10 px-4 py-2 text-sm text-indigo-200 mb-8"
+        >
+          <span className="h-2 w-2 rounded-full bg-indigo-400 animate-pulse" />
+          Premium Investment Platform
+        </motion.div>
+
         <motion.h1
           variants={itemVariants}
-          className="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight leading-tight"
+          className="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-tight"
         >
-          Unlock Wealth Growth with 
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-silver-light to-primary mt-2">
-            Secure, Innovative Investments
+          Invest Smarter.
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 mt-2 animate-gradient-x">
+            Grow Faster.
           </span>
         </motion.h1>
 
         <motion.p
           variants={itemVariants}
-          className="text-lg md:text-xl text-blue-gray-300 mb-12 max-w-3xl mx-auto"
+          className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto"
         >
-          Join thousands earning seamlessly with Fulxerpro. We provide the tools and expertise to help you navigate the future of finance with confidence.
+          Your gateway to intelligent investments in crypto, stocks, real estate, and automobiles. We provide the tools and expertise to help you navigate the future of finance with confidence.
         </motion.p>
 
         <motion.div
           variants={itemVariants}
           className="flex flex-col sm:flex-row gap-6 justify-center"
         >
-          <motion.button 
-            className="bg-primary px-8 py-3 rounded-full text-lg font-semibold hover:bg-primary-hover transition-all duration-300 shadow-lg shadow-blue-500/30"
-            whileHover={{ scale: 1.05, y: -2 }}
+          <motion.button
+            className="bg-gradient-to-r from-indigo-600 to-purple-600 px-8 py-4 rounded-2xl text-lg font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:shadow-xl hover:scale-105"
+            whileHover={{ scale: 1.1, boxShadow: "0 0 30px rgba(124, 58, 237, 0.5)" }}
             whileTap={{ scale: 0.95 }}
           >
-            Create Account
+            Start Investing
           </motion.button>
-          <motion.button 
-            className="bg-transparent border-2 border-blue-gray-400 px-8 py-3 rounded-full text-lg font-semibold hover:bg-blue-gray-800 hover:border-blue-gray-300 transition-all duration-300"
-            whileHover={{ scale: 1.05, y: -2 }}
+          <motion.button
+            className="bg-transparent border-2 border-white/20 px-8 py-4 rounded-2xl text-lg font-semibold text-white hover:bg-white/10 hover:border-white/40 transition-all transform hover:scale-105 backdrop-blur-sm"
+            whileHover={{ scale: 1.1, boxShadow: "0 0 20px rgba(255, 255, 255, 0.3)" }}
             whileTap={{ scale: 0.95 }}
           >
-            Learn More
+            View Markets
           </motion.button>
         </motion.div>
       </motion.div>
@@ -88,3 +90,4 @@ const Hero = () => {
 };
 
 export default Hero;
+

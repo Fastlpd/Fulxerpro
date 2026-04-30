@@ -23,62 +23,79 @@ const properties = [
 ];
 
 const cardVariants: Variants = {
-    hidden: { scale: 0.9, opacity: 0 },
-    visible: (custom: number) => ({ // Correctly define custom parameter
-      scale: 1,
-      opacity: 1,
-      transition: {
-        delay: custom * 0.2, // Use custom for delay
-        type: 'spring',
-        stiffness: 150,
-        damping: 20, // Added damping for a smoother spring effect
-      },
-    }),
-  };
+  hidden: { scale: 0.9, opacity: 0, y: 50 },
+  visible: (custom: number) => ({
+    scale: 1,
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: custom * 0.2,
+      type: 'spring',
+      stiffness: 150,
+      damping: 20,
+    },
+  }),
+};
 
 const HousingInvestment: React.FC = () => {
   return (
-    <section id="housing-investments" className="bg-white py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Real Estate Investments</h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-blue-gray-900 sm:text-4xl">
+    <section id="housing-investments" className="relative bg-gradient-to-br from-slate-950 via-slate-900 to-black py-24 overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.15),_transparent_25%),radial-gradient(circle_at_bottom_left,_rgba(16,185,129,0.12),_transparent_30%)]" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-200 mb-4">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
+            Real Estate Investments
+          </div>
+          <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl mb-4">
             Build Your Foundation in Property
+          </h2>
+          <p className="max-w-3xl text-xl text-gray-400 mx-auto">
+            Invest in a diverse portfolio of vetted residential and commercial properties with high growth potential. Secure your future in prime locations.
           </p>
-          <p className="mt-4 max-w-2xl text-xl text-blue-gray-500 mx-auto">
-            Invest in a diverse portfolio of vetted residential and commercial properties with high growth potential.
-          </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {properties.map((prop, i) => (
             <motion.div
               key={prop.name}
-              className="bg-white rounded-2xl overflow-hidden shadow-lg border border-blue-gray-100 flex flex-col"
+              className="group relative bg-slate-900/90 rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl backdrop-blur-xl"
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, amount: 0.3 }}
               custom={i}
+              whileHover={{ y: -10 }}
             >
-              <div className="relative">
-                <img className="h-64 w-full object-cover" src={prop.imageUrl} alt={prop.name} />
-                <div className="absolute bottom-0 left-0 bg-gradient-to-t from-black/80 to-transparent w-full p-4">
-                    <h3 className="text-2xl font-bold text-white">{prop.name}</h3>
+              <div className="relative overflow-hidden">
+                <img
+                  className="h-72 w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  src={prop.imageUrl}
+                  alt={prop.name}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute top-4 right-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-lg py-2 px-4 rounded-full shadow-lg">
+                  {prop.price}
+                </div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <h3 className="text-2xl font-bold text-white mb-2">{prop.name}</h3>
+                  <p className="text-gray-300 text-sm">{prop.architecture}</p>
                 </div>
               </div>
-              <div className="p-6 flex flex-col flex-grow">
-                <p className="text-blue-gray-600 flex-grow"><span className='font-semibold text-blue-gray-700'>Architecture:</span> {prop.architecture}</p>
-                <div className="mt-4 flex justify-between items-center">
-                    <span className="text-3xl font-bold text-primary">{prop.price}</span>
-                    <motion.button
-                        className="py-2 px-6 rounded-lg font-semibold bg-primary text-white hover:bg-primary-hover transition-all duration-300"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                    >
-                        Invest Now
-                    </motion.button>
-                </div>
+              <div className="p-6">
+                <motion.button
+                  className="w-full py-4 px-6 rounded-2xl font-semibold text-lg bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl hover:scale-105"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Invest Now
+                </motion.button>
               </div>
             </motion.div>
           ))}
