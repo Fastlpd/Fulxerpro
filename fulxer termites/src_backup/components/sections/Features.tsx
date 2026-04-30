@@ -40,7 +40,7 @@ const Features = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          Why Choose Argentum
+          Why Choose FulxerPro
         </motion.h2>
 
         <div className="grid md:grid-cols-3 gap-12">

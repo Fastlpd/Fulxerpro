@@ -13,7 +13,7 @@ const plans = [
     theme: 'silver',
   },
   {
-    name: 'Argentum Pro',
+    name: 'FulxerPro',
     description: 'For the serious investor looking for more.',
     minInvestment: '$5,000',
     returns: 'Up to 15% APY',

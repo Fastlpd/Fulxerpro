@@ -32,7 +32,7 @@ const Footer = () => {
       <div className="container mx-auto px-6 text-center">
         {/* Main copyright line – elegant silver text */}
         <p className="text-lg font-light tracking-wide">
-          © {new Date().getFullYear()} Argentum. All rights reserved.
+          © {new Date().getFullYear()} FulxerPro. All rights reserved.
           <span className="ml-2 text-sm text-gray-500">Los Angeles, CA</span>
         </p>
 
@@ -52,7 +52,7 @@ const Footer = () => {
           <motion.a
             variants={itemVariants}
             whileHover="hover"
-            href="https://facebook.com/argentum"
+            href="https://facebook.com/fulxerpro"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors duration-300"
@@ -64,7 +64,7 @@ const Footer = () => {
           <motion.a
             variants={itemVariants}
             whileHover="hover"
-            href="https://twitter.com/argentum"
+            href="https://twitter.com/fulxerpro"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors duration-300"
@@ -76,7 +76,7 @@ const Footer = () => {
           <motion.a
             variants={itemVariants}
             whileHover="hover"
-            href="https://linkedin.com/company/argentum"
+            href="https://linkedin.com/company/fulxerpro"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-white transition-colors duration-300"

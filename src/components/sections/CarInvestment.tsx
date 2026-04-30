@@ -3,22 +3,40 @@ import { motion, type Variants } from 'framer-motion';
 
 const cars = [
   {
-    name: 'Bentley Continental GT',
-    description: 'A stunning example of British luxury and performance. A timeless investment.',
-    price: '$250,000',
-    imageUrl: 'https://images.unsplash.com/photo-1570356528259-a4473e7d383a?q=80&w=2070&auto=format&fit=crop',
+    name: 'Ferrari SF90 Stradale',
+    description: 'The ultimate hybrid supercar with 986 hp, blending electric and V8 power for unparalleled performance.',
+    price: '$750,000',
+    imageUrl: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=2070&auto=format&fit=crop',
   },
   {
-    name: 'Ferrari F8 Tributo',
-    description: 'The pinnacle of Italian engineering. Own a piece of motorsport history.',
+    name: 'McLaren 720S',
+    description: 'Carbon fiber masterpiece with 710 hp twin-turbo V8, delivering supercar thrills at every corner.',
     price: '$350,000',
-    imageUrl: 'https://images.unsplash.com/photo-1612764049760-06ac41d20f6d?q=80&w=1974&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=2070&auto=format&fit=crop',
   },
   {
-    name: 'Mercedes-Benz S-Class',
-    description: 'The benchmark for luxury sedans. A sound investment in comfort and technology.',
-    price: '$180,000',
-    imageUrl: 'https://images.unsplash.com/photo-1599533355422-a398b15878d0?q=80&w=2070&auto=format&fit=crop',
+    name: 'Porsche 911 Turbo S',
+    description: 'Iconic sports car evolution with 640 hp, all-wheel drive, and precision German engineering.',
+    price: '$220,000',
+    imageUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2070&auto=format&fit=crop',
+  },
+  {
+    name: 'Cadillac Escalade ESV',
+    description: 'Luxury SUV flagship with V8 power, advanced tech, and spacious interior for ultimate comfort.',
+    price: '$85,000',
+    imageUrl: 'https://images.unsplash.com/photo-1549399735-cef2e2c3f638?q=80&w=2070&auto=format&fit=crop',
+  },
+  {
+    name: 'BMW M8 Competition',
+    description: 'High-performance grand tourer with 617 hp V8, M-specific dynamics, and premium luxury.',
+    price: '$140,000',
+    imageUrl: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=2070&auto=format&fit=crop',
+  },
+  {
+    name: 'Lamborghini Huracan Evo',
+    description: 'Mid-engine beast with 631 hp V10, aggressive styling, and track-ready performance.',
+    price: '$260,000',
+    imageUrl: 'https://images.unsplash.com/photo-1544829099-b9a0e3421cfb?q=80&w=2070&auto=format&fit=crop',
   },
 ];
 

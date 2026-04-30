@@ -1,5 +1,5 @@
 import { motion, type Variants } from 'framer-motion';
-import { FiTrendingUp, FiLock, FiBarChart2 } from 'react-icons/fi';
+import { FiTrendingUp, FiLock, FiBarChart2, FiShare2 } from 'react-icons/fi';
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -12,10 +12,11 @@ const containerVariants: Variants = {
 };
 
 const featureVariants: Variants = {
-  hidden: { y: 50, opacity: 0 },
+  hidden: { y: 50, opacity: 0, scale: 0.9 },
   visible: {
     y: 0,
     opacity: 1,
+    scale: 1,
     transition: {
       stiffness: 100,
       damping: 20,
@@ -23,10 +24,37 @@ const featureVariants: Variants = {
   },
 };
 
+const features = [
+  {
+    title: "Real-Time Analytics",
+    icon: <FiTrendingUp className="text-6xl text-primary mb-6 mx-auto" />,
+    description: "Stay ahead of the market with up-to-the-second data and powerful insights.",
+    shadowColor: "shadow-primary/50",
+  },
+  {
+    title: "Secure Transactions",
+    icon: <FiLock className="text-6xl text-accent mb-6 mx-auto" />,
+    description: "Your investments and data are protected with world-class security protocols.",
+    shadowColor: "shadow-accent/50",
+  },
+  {
+    title: "Portfolio Tracking",
+    icon: <FiBarChart2 className="text-6xl text-primary mb-6 mx-auto" />,
+    description: "Tailor your workspace to focus on the metrics and markets that matter most to you.",
+    shadowColor: "shadow-primary/50",
+  },
+  {
+    title: "Automated Profit Distribution",
+    icon: <FiShare2 className="text-6xl text-accent mb-6 mx-auto" />,
+    description: "Receive your profits automatically without any hassle.",
+    shadowColor: "shadow-accent/50",
+  }
+]
+
 const Features = () => {
   return (
     <motion.section
-      className="py-24 bg-gradient-to-b from-gray-900 to-black"
+      className="py-24 bg-background text-text"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
@@ -34,57 +62,36 @@ const Features = () => {
     >
       <div className="container mx-auto px-6">
         <motion.h2
-          className="text-4xl md:text-5xl font-bold text-center mb-16 text-white"
+          className="text-4xl md:text-5xl font-bold text-center mb-16"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          Why Choose Argentum
+          Key Features
         </motion.h2>
 
-        <div className="grid md:grid-cols-3 gap-12">
-          {/* Feature 1 */}
-          <motion.div
-            className="bg-gray-800/50 backdrop-blur-md p-10 rounded-3xl border border-gray-700 hover:border-purple-500/50 transition-all duration-300 shadow-xl hover:shadow-purple-500/20"
-            variants={featureVariants}
-          >
-            <FiTrendingUp className="text-6xl text-purple-400 mb-6 mx-auto" />
-            <h3 className="text-2xl font-bold mb-4 text-white text-center">
-              Real-time Analytics
-            </h3>
-            <p className="text-gray-300 text-center">
-              Stay ahead of the market with up-to-the-second data and powerful insights.
-            </p>
-          </motion.div>
-
-          {/* Feature 2 */}
-          <motion.div
-            className="bg-gray-800/50 backdrop-blur-md p-10 rounded-3xl border border-gray-700 hover:border-pink-500/50 transition-all duration-300 shadow-xl hover:shadow-pink-500/20"
-            variants={featureVariants}
-          >
-            <FiLock className="text-6xl text-pink-500 mb-6 mx-auto" />
-            <h3 className="text-2xl font-bold mb-4 text-white text-center">
-              Bank-Grade Security
-            </h3>
-            <p className="text-gray-300 text-center">
-              Your investments and data are protected with world-class security protocols.
-            </p>
-          </motion.div>
-
-          {/* Feature 3 */}
-          <motion.div
-            className="bg-gray-800/50 backdrop-blur-md p-10 rounded-3xl border border-gray-700 hover:border-purple-500/50 transition-all duration-300 shadow-xl hover:shadow-purple-500/20"
-            variants={featureVariants}
-          >
-            <FiBarChart2 className="text-6xl text-purple-400 mb-6 mx-auto" />
-            <h3 className="text-2xl font-bold mb-4 text-white text-center">
-              Customizable Dashboards
-            </h3>
-            <p className="text-gray-300 text-center">
-              Tailor your workspace to focus on the metrics and markets that matter most to you.
-            </p>
-          </motion.div>
+        <div className="grid md:grid-cols-4 gap-8">
+          {features.map((feature, index) => (
+            <motion.div
+              key={index}
+              className="bg-secondary/50 backdrop-blur-lg p-10 rounded-3xl border border-border transition-all duration-300"
+              variants={featureVariants}
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: `0 0 25px ${feature.shadowColor}`,
+                borderColor: "rgba(255, 255, 255, 0.5)"
+              }}
+            >
+              {feature.icon}
+              <h3 className="text-2xl font-bold mb-4 text-text text-center">
+                {feature.title}
+              </h3>
+              <p className="text-text-secondary text-center">
+                {feature.description}
+              </p>
+            </motion.div>
+          ))}
         </div>
       </div>
     </motion.section>

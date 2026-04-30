@@ -1,83 +1,70 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  const navLinks = ['Investments', 'Market', 'About Us', 'Contact'];
+const Header: React.FC = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <motion.header 
-      className="fixed top-0 left-0 right-0 z-50 bg-blue-gray-900 bg-opacity-80 backdrop-blur-md text-blue-gray-200"
+    <motion.header
+      className="fixed top-0 left-0 right-0 z-50 bg-slate-950 bg-opacity-90 backdrop-blur-md border-b border-slate-800"
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+      transition={{ type: "spring", stiffness: 120, damping: 20 }}
     >
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <motion.div 
-          className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-silver-light to-primary"
-          whileHover={{ scale: 1.05 }}
-        >
-          FulxerPro
-        </motion.div>
-        <nav className="hidden md:flex items-center space-x-8">
-          {navLinks.map((item) => (
-            <motion.a
-              key={item}
-              href={`#${item.toLowerCase().replace(' ', '-')}`}
-              className="hover:text-white transition-colors duration-300"
-              whileHover={{ y: -2 }}
-            >
-              {item}
-            </motion.a>
-          ))}
-        </nav>
-        <div className="hidden md:flex items-center space-x-4">
-          <motion.button 
-            className="hover:text-white transition-colors duration-300"
+      <nav className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="flex items-center">
+          <span className="text-2xl font-bold text-gradient">FulxerPro</span>
+        </div>
+        <div className="hidden md:flex items-center space-x-8">
+          <a href="#hero" className="text-gray-300 hover:text-indigo-400 transition-colors duration-300 font-medium">Home</a>
+          <a href="#features" className="text-gray-300 hover:text-indigo-400 transition-colors duration-300 font-medium">Features</a>
+          <a href="#market" className="text-gray-300 hover:text-indigo-400 transition-colors duration-300 font-medium">Markets</a>
+          <a href="#why-us" className="text-gray-300 hover:text-indigo-400 transition-colors duration-300 font-medium">Why Choose Us</a>
+          <a href="#testimonials" className="text-gray-300 hover:text-indigo-400 transition-colors duration-300 font-medium">Testimonials</a>
+        </div>
+        <div className="hidden md:flex gap-4">
+          <motion.button
+            className="px-6 py-2 text-indigo-400 border border-indigo-400 rounded-lg font-semibold hover:bg-indigo-400/10 transition-all duration-300"
             whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            Login
+            Log In
           </motion.button>
-          <motion.button 
-            className="bg-primary px-6 py-2 rounded-full hover:bg-primary-hover transition-all duration-300 shadow-lg shadow-blue-500/20"
-            whileHover={{ scale: 1.05, y: -2 }}
+          <motion.button
+            className="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Sign Up
           </motion.button>
         </div>
+        {/* Mobile menu button */}
         <div className="md:hidden">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-blue-gray-300 hover:text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"} />
-            </svg>
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-gray-300 focus:outline-none"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
           </button>
         </div>
-      </div>
-      
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <motion.div 
-          className="md:hidden bg-blue-gray-800 bg-opacity-90"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
+      </nav>
+
+      {/* Mobile menu */}
+      {mobileMenuOpen && (
+        <motion.div
+          className="md:hidden bg-slate-900 border-t border-slate-800 px-6 py-4 space-y-4"
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
         >
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navLinks.map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase().replace(' ', '-')}`}
-                className="block px-3 py-2 rounded-md text-base font-medium text-blue-gray-300 hover:bg-blue-gray-700 hover:text-white"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item}
-              </a>
-            ))}
-            <div className="border-t border-blue-gray-700 my-2"></div>
-            <a href="#" className="block px-3 py-2 rounded-md text-base font-medium text-blue-gray-300 hover:bg-blue-gray-700 hover:text-white" onClick={() => setIsMenuOpen(false)}>Login</a>
-            <a href="#" className="block px-3 py-2 rounded-md text-base font-medium bg-primary text-white hover:bg-primary-hover" onClick={() => setIsMenuOpen(false)}>Sign Up</a>
+          <a href="#hero" className="block text-gray-300 hover:text-indigo-400 transition-colors">Home</a>
+          <a href="#features" className="block text-gray-300 hover:text-indigo-400 transition-colors">Features</a>
+          <a href="#market" className="block text-gray-300 hover:text-indigo-400 transition-colors">Markets</a>
+          <a href="#why-us" className="block text-gray-300 hover:text-indigo-400 transition-colors">Why Choose Us</a>
+          <a href="#testimonials" className="block text-gray-300 hover:text-indigo-400 transition-colors">Testimonials</a>
+          <div className="flex gap-2 pt-4">
+            <button className="flex-1 px-4 py-2 text-indigo-400 border border-indigo-400 rounded-lg text-sm font-semibold">Log In</button>
+            <button className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold">Sign Up</button>
           </div>
         </motion.div>
       )}
