@@ -2,7 +2,8 @@ import React from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
-import { LayoutDashboard, TrendingUp, Wallet, Users, ShieldCheck, History, LogOut, Sun, Moon, Settings, Cog } from "lucide-react";
+import { LayoutDashboard, TrendingUp, Wallet, Users, ShieldCheck, History, LogOut, Sun, Moon, Settings, Cog, Lock } from "lucide-react";
+import ConciergeWidget from "@/components/ConciergeWidget";
 
 const navItems = [
   { to: "/app/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -11,6 +12,7 @@ const navItems = [
   { to: "/app/transactions", label: "Transactions", icon: History },
   { to: "/app/referrals", label: "Referrals", icon: Users },
   { to: "/app/kyc", label: "KYC", icon: ShieldCheck },
+  { to: "/app/security", label: "Security", icon: Lock },
 ];
 
 export default function AppLayout() {
@@ -99,7 +101,9 @@ export default function AppLayout() {
         <div className="p-6 md:p-10 max-w-7xl mx-auto">
           <Outlet />
         </div>
+        <ConciergeWidget />
       </main>
     </div>
   );
 }
+

@@ -15,6 +15,8 @@ import Transactions from "@/pages/Transactions";
 import Referrals from "@/pages/Referrals";
 import KYC from "@/pages/KYC";
 import Admin from "@/pages/Admin";
+import Security from "@/pages/Security";
+import ConciergeWidget from "@/components/ConciergeWidget";
 
 function Protected({ children, adminOnly }) {
   const { user, loading } = useAuth();
@@ -42,6 +44,7 @@ function App() {
               <Route path="transactions" element={<Transactions />} />
               <Route path="referrals" element={<Referrals />} />
               <Route path="kyc" element={<KYC />} />
+              <Route path="security" element={<Security />} />
               <Route path="admin" element={<Protected adminOnly><Admin /></Protected>} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />

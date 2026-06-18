@@ -7,6 +7,9 @@ from core.deps import get_current_user
 from models.schemas import UserRegister, UserLogin, new_id, now_iso, short_referral_code
 from services.rate_limit import make_limiter
 from services.audit import log_event
+from services.email import send_email, tpl_welcome
+from routers.twofa import verify_totp_code
+import pyotp
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -56,6 +59,13 @@ async def register(payload: UserRegister, request: Request, response: Response):
     ip = request.client.host if request.client else None
     await log_event("user_registered", user_id, ip, {"email": email})
 
+    # Send welcome email (log-mode fallback if SendGrid not configured)
+    subject, html = tpl_welcome(payload.name)
+    try:
+        await send_email(email, subject, html)
+    except Exception:
+        pass
+
     access = create_access_token(user_id, email, "user")
     refresh = create_refresh_token(user_id)
     _set_cookies(response, access, refresh)
@@ -86,6 +96,17 @@ async def login(payload: UserLogin, request: Request, response: Response):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
     await db.login_attempts.delete_one({"identifier": identifier})
+
+    # 2FA enforcement: admins MUST have 2FA enabled (set up on first login), users only if opted-in
+    is_admin = user.get("role") in ("admin", "super_admin")
+    has_2fa = user.get("totp_enabled")
+    if has_2fa:
+        if not payload.totp_code:
+            raise HTTPException(status_code=401, detail="2FA code required")
+        if not verify_totp_code(user.get("totp_secret", ""), payload.totp_code):
+            await log_event("login_2fa_failed", user["id"], ip)
+            raise HTTPException(status_code=401, detail="Invalid 2FA code")
+
     await log_event("login_success", user["id"], ip)
 
     access = create_access_token(user["id"], user["email"], user["role"])

@@ -86,6 +86,19 @@ async def decide_transaction(tx_id: str, payload: TransactionDecision, admin: di
 
     if payload.decision == "approve" and tx["type"] == "deposit":
         await db.users.update_one({"id": tx["user_id"]}, {"$inc": {"balance": tx["amount"]}})
+        u = await db.users.find_one({"id": tx["user_id"]})
+        if u:
+            from services.email import send_email, tpl_deposit_approved
+            s, h = tpl_deposit_approved(u["name"], tx["amount"])
+            try: await send_email(u["email"], s, h)
+            except Exception: pass
+    elif payload.decision == "approve" and tx["type"] == "withdrawal":
+        u = await db.users.find_one({"id": tx["user_id"]})
+        if u:
+            from services.email import send_email, tpl_withdrawal_approved
+            s, h = tpl_withdrawal_approved(u["name"], tx["amount"])
+            try: await send_email(u["email"], s, h)
+            except Exception: pass
     elif payload.decision == "reject" and tx["type"] == "withdrawal":
         # refund the held balance
         await db.users.update_one({"id": tx["user_id"]}, {"$inc": {"balance": tx["amount"]}})

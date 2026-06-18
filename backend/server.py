@@ -12,7 +12,8 @@ from core.db import db, init_indexes
 from core.security import hash_password, verify_password
 from models.schemas import new_id, now_iso, short_referral_code
 
-from routers import auth, plans, investments, transactions, portfolio, referrals, kyc, admin
+from routers import auth, plans, investments, transactions, portfolio, referrals, kyc, admin, twofa, concierge
+from services.scheduler import start_scheduler
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("fulxerpro")
@@ -24,7 +25,8 @@ api_v1 = APIRouter(prefix="/api/v1")
 api_legacy = APIRouter(prefix="/api")
 
 for r in [auth.router, plans.router, investments.router, transactions.router,
-          portfolio.router, referrals.router, kyc.router, admin.router]:
+          portfolio.router, referrals.router, kyc.router, admin.router,
+          twofa.router, concierge.router]:
     api_v1.include_router(r)
     api_legacy.include_router(r)
 
@@ -105,6 +107,7 @@ async def startup():
     await init_indexes()
     await seed_admin()
     await seed_plans()
+    start_scheduler()
     logger.info("FulxerPro API ready")
 
 

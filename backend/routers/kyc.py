@@ -1,9 +1,10 @@
 """KYC submission and admin review."""
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from core.db import db
 from core.deps import get_current_user, require_admin
 from models.schemas import KYCSubmit, new_id, now_iso
 from services.audit import log_event
+from services import sumsub
 
 router = APIRouter(prefix="/kyc", tags=["kyc"])
 
@@ -36,6 +37,35 @@ async def my_kyc(user: dict = Depends(get_current_user)):
 async def list_pending_kyc():
     items = await db.kyc_submissions.find({"status": "pending"}, {"_id": 0}).to_list(500)
     return items
+
+
+@router.get("/sumsub/access-token")
+async def sumsub_token(user: dict = Depends(get_current_user)):
+    """Generate a Sumsub SDK access token for the frontend to launch verification."""
+    token = await sumsub.generate_access_token(user["id"])
+    return token
+
+
+@router.post("/sumsub/webhook")
+async def sumsub_webhook(request: Request):
+    """Webhook endpoint Sumsub calls when verification finishes."""
+    payload = await request.body()
+    sig = request.headers.get("X-Payload-Digest", "")
+    if not sumsub.verify_webhook_signature(payload, sig):
+        raise HTTPException(401, "Invalid signature")
+    import json
+    data = json.loads(payload.decode() or "{}")
+    event = sumsub.parse_webhook_event(data)
+    if not event:
+        return {"ok": True, "skipped": True}
+    await db.users.update_one({"id": event["user_id"]}, {"$set": {"kyc_status": event["status"]}})
+    await db.kyc_submissions.update_one(
+        {"user_id": event["user_id"]},
+        {"$set": {"status": event["status"], "decided_at": now_iso(), "provider": "sumsub"}},
+        upsert=True,
+    )
+    await log_event(f"sumsub_{event['status']}", event["user_id"])
+    return {"ok": True}
 
 
 @router.post("/{user_id}/decision", dependencies=[Depends(require_admin)])
