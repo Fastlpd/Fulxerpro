@@ -15,6 +15,8 @@ async def init_indexes():
     await db.investments.create_index([("user_id", 1), ("status", 1)])
     await db.audit_logs.create_index([("created_at", -1)])
     await db.plans.create_index("active")
+    await db.assets.create_index([("category", 1), ("tier", 1), ("market_value", 1)])
+    await db.user_asset_prefs.create_index([("user_id", 1), ("asset_id", 1)], unique=True)
 
 
 def get_db():

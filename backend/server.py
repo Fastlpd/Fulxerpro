@@ -110,6 +110,9 @@ async def startup():
     await init_indexes()
     await seed_admin()
     await seed_plans()
+    n = await seed_assets()
+    if n:
+        logger.info("Seeded %d marketplace assets", n)
     start_scheduler()
     logger.info("FulxerPro API ready")
 
