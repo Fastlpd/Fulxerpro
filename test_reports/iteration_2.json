@@ -1,0 +1,44 @@
+{
+  "summary": "Iteration 2 testing: validated all 5 new feature areas (TOTP 2FA, Sumsub mock KYC, Claude Sonnet 4.5 Concierge SSE, SendGrid log-mock emails, APScheduler maturity job) on backend and ran frontend smoke for /app/security + concierge FAB. Backend pytest suite: 13/13 PASS. Frontend smoke: both flows pass — 2FA Required banner renders for admin, concierge widget streams a real Claude response referencing all 4 FulxerPro plan names.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/auth/register", "issue": "Rate limit 5/300s is so tight that any test suite that creates >5 users in 5min hits 429. Carried over from iter1. Workaround: maturity + concierge tests now seed users directly via Mongo to bypass this."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Dashboard with concierge open", "issues": ["Concierge panel at right-44 sits next to 'Made with Emergent' badge — readable, but FAB position changes when panel opens. Cosmetic only."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iteration2.py",
+    "/app/backend/tests/backend_test.py",
+    "/app/test_reports/pytest/iter2_results.xml"
+  ],
+  "action_items": [
+    "Optional: relax /api/auth/register rate limit from 5/300s to something like 20/300s for tests, OR allow per-IP exemption when SUMSUB_MODE=mock/DEV mode flag is set.",
+    "Optional: add admin-friendly 2FA recovery path (currently admins cannot disable 2FA at all — by design, but adds friction for password resets)."
+  ],
+  "critical_code_review_comments": [
+    "Concierge /ask correctly returns SSE with Content-Type text/event-stream and emits {type:delta} chunks then {type:done} — both user + assistant messages persisted to db.concierge_messages with role, session_id, content, created_at. Verified.",
+    "twofa.py: setup stages secret in totp_secret_pending and only promotes to totp_secret + totp_enabled=true after verify(). Clean two-step enrollment.",
+    "auth login enforces 2FA when user.totp_enabled — returns 401 '2FA code required' when missing, 401 'Invalid 2FA code' when wrong. Verified end-to-end.",
+    "Admins are blocked from /api/2fa/disable with 403 by role check before TOTP verification — verified.",
+    "Sumsub mock token shape correct: {token,user_id,level,expires_in,mode}. Webhook GREEN -> verified, RED -> rejected; signature verifier returns True in mock mode (acceptable for sandbox).",
+    "services/email.py: log mode is default; structured 'EMAIL (mock)' block contains From/To/Subject/Body — easy to grep. Welcome and deposit-approved subjects verified in backend.err.log.",
+    "services/scheduler.py: APScheduler starts on FastAPI startup, runs every 10 minutes, atomically credits balance, sets status=matured, inserts maturity transaction, sends email, logs audit. Verified end-to-end by direct invocation.",
+    "Minor: scheduler/audit/email modules use `from core.db import db` at import time, so swapping the db reference for testing requires patching all 3 modules — works but couples tests to internals. Consider passing db as a parameter or using a getter for future-proofing."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iteration2.py"
+  ],
+  "success_rate": {"backend": "100% (13/13 iter2 tests passed)", "frontend": "100% (security page + concierge FAB streaming both verified)"},
+  "test_credentials": "Admin admin@fulxerpro.com / Admin@12345 — NOW HAS 2FA ENABLED after iter2 tests. TOTP secret: KMOYXEIV33T4SPSURPRFEHNX3WI757RL. Future tests must include totp_code in /api/auth/login body (use pyotp.TOTP(secret).now()).",
+  "seed_data_creation": "Iter2 tests create TEST_*@user.com users (some via /register, some seeded directly into Mongo when rate-limited). Concierge messages and a matured investment record left in DB for audit. No production data altered.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend public URL: https://platform-overhaul-7.preview.emergentagent.com/api. Run: `python -m pytest /app/backend/tests/test_iteration2.py -v` (full suite ~52s). Critical: admin now has 2FA enabled — TOTP secret is in db.users {email:admin@fulxerpro.com}.totp_secret. The helper _admin_session() in test_iteration2.py auto-fetches the secret and retries login. The /api/auth/register rate limit (5/300s) is brutal; if you must create many users, seed them directly via Mongo (see TestScheduler/TestConcierge for the pattern). Concierge first response takes 4-9s for Claude warmup. SSE consumer must use stream=True + iter_lines and parse 'data: {...}' frames."
+}
