@@ -12,8 +12,9 @@ from core.db import db, init_indexes
 from core.security import hash_password, verify_password
 from models.schemas import new_id, now_iso, short_referral_code
 
-from routers import auth, plans, investments, transactions, portfolio, referrals, kyc, admin, twofa, concierge
+from routers import auth, plans, investments, transactions, portfolio, referrals, kyc, admin, twofa, concierge, settings as settings_router, notifications, users, wallets, analytics
 from services.scheduler import start_scheduler
+from services.secure_headers import SecureHeadersMiddleware
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("fulxerpro")
@@ -26,7 +27,8 @@ api_legacy = APIRouter(prefix="/api")
 
 for r in [auth.router, plans.router, investments.router, transactions.router,
           portfolio.router, referrals.router, kyc.router, admin.router,
-          twofa.router, concierge.router]:
+          twofa.router, concierge.router, settings_router.router,
+          notifications.router, users.router, wallets.router, analytics.router]:
     api_v1.include_router(r)
     api_legacy.include_router(r)
 
@@ -55,6 +57,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(SecureHeadersMiddleware)
 
 
 # Global exception handler -> JSON

@@ -173,7 +173,42 @@ class TestSumsub:
 
 class TestConcierge:
     def test_ask_streams_sse_and_persists(self):
-        s = _register_user(name="Concierge User")
+        # Create user directly in DB to bypass /register rate-limit, then login
+        import sys
+        sys.path.insert(0, "/app/backend")
+        from core.security import hash_password
+        from models.schemas import new_id, now_iso, short_referral_code
+        from motor.motor_asyncio import AsyncIOMotorClient
+        from dotenv import dotenv_values
+        envv = dotenv_values("/app/backend/.env")
+        mongo_url = (envv.get("MONGO_URL") or "mongodb://localhost:27017").strip().strip('"').strip("'")
+        db_name = (envv.get("DB_NAME") or "fulxerpro").strip().strip('"').strip("'")
+        email = _new_email("concierge").lower()
+
+        async def _seed():
+            client = AsyncIOMotorClient(mongo_url)
+            ldb = client[db_name]
+            await ldb.users.insert_one({
+                "id": new_id(),
+                "email": email,
+                "name": "Concierge User",
+                "password_hash": hash_password("Test@12345"),
+                "role": "user",
+                "kyc_status": "verified",
+                "referral_code": short_referral_code(),
+                "referred_by": None,
+                "balance": 5000.0,
+                "created_at": now_iso(),
+            })
+            client.close()
+        asyncio.run(_seed())
+
+        s = requests.Session()
+        # /login is 10/60s — generally safer than /register
+        lr = s.post(f"{API}/auth/login", json={"email": email, "password": "Test@12345"})
+        if lr.status_code == 429:
+            pytest.skip("login rate-limited; rerun later")
+        assert lr.status_code == 200, lr.text
         # Use stream=True to consume SSE
         with s.post(
             f"{API}/concierge/ask",
@@ -316,15 +351,19 @@ class TestScheduler:
             })
             # Patch scheduler's db reference to use this loop's client, then run job
             import services.scheduler as sched_mod
+            import services.audit as audit_mod
             import core.db as core_db
             old_db = core_db.db
+            old_aud_db = audit_mod.db
             core_db.db = ldb
             sched_mod.db = ldb
+            audit_mod.db = ldb
             try:
                 await mature_investments_job()
             finally:
                 core_db.db = old_db
                 sched_mod.db = old_db
+                audit_mod.db = old_aud_db
             user = await ldb.users.find_one({"id": uid})
             inv = await ldb.investments.find_one({"id": inv_id})
             tx = await ldb.transactions.find_one({"id": f"mat_{inv_id}"})

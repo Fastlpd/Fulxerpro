@@ -20,8 +20,11 @@ LOCKOUT_MINUTES = 15
 
 
 def _set_cookies(response: Response, access: str, refresh: str):
-    response.set_cookie("access_token", access, httponly=True, secure=False, samesite="lax", max_age=3600, path="/")
-    response.set_cookie("refresh_token", refresh, httponly=True, secure=False, samesite="lax", max_age=604800, path="/")
+    import os
+    secure = os.environ.get("SECURE_COOKIES", "0") == "1"
+    samesite = "strict" if secure else "lax"
+    response.set_cookie("access_token", access, httponly=True, secure=secure, samesite=samesite, max_age=3600, path="/")
+    response.set_cookie("refresh_token", refresh, httponly=True, secure=secure, samesite=samesite, max_age=604800, path="/")
 
 
 def _serialize_user(u: dict) -> dict:
