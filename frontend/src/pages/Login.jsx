@@ -1,28 +1,39 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { api, formatApiErrorDetail } from "@/lib/api";
+import { ArrowRight, Loader2, ShieldCheck } from "lucide-react";
 
 export default function Login() {
-  const { login } = useAuth();
+  const { refresh } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [totpCode, setTotpCode] = useState("");
+  const [needsTotp, setNeedsTotp] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setError(""); setLoading(true);
-    const res = await login(email, password);
-    setLoading(false);
-    if (res.ok) {
+    try {
+      const body = { email, password };
+      if (totpCode) body.totp_code = totpCode;
+      await api.post("/auth/login", body);
+      await refresh();
       const to = location.state?.from || "/app/dashboard";
       navigate(to, { replace: true });
-    } else {
-      setError(res.error || "Login failed");
-    }
+    } catch (e) {
+      const detail = formatApiErrorDetail(e.response?.data?.detail);
+      if (typeof detail === "string" && /2fa code required/i.test(detail)) {
+        setNeedsTotp(true);
+        setError("Enter the 6-digit code from your authenticator app.");
+      } else {
+        setError(detail || "Login failed");
+      }
+    } finally { setLoading(false); }
   };
 
   return (
@@ -43,7 +54,11 @@ export default function Login() {
           <h2 className="font-serif text-3xl">Sign in</h2>
           <p className="text-sm text-muted-foreground mt-1">Enter your credentials to continue.</p>
 
-          {error && <div className="mt-6 p-3 text-sm bg-destructive/10 text-destructive border border-destructive/20 rounded-md" data-testid="login-error">{error}</div>}
+          {error && (
+            <div className={`mt-6 p-3 text-sm border rounded-md ${needsTotp ? "bg-warning/10 text-foreground border-warning/40" : "bg-destructive/10 text-destructive border-destructive/20"}`} data-testid="login-error">
+              {needsTotp && <ShieldCheck className="w-4 h-4 inline mr-1 mb-0.5" />}{error}
+            </div>
+          )}
 
           <label className="block mt-6">
             <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Email</span>
@@ -55,6 +70,16 @@ export default function Login() {
             <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} data-testid="login-password"
               className="mt-2 w-full px-4 py-3 border border-border bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring" />
           </label>
+
+          {needsTotp && (
+            <label className="block mt-4">
+              <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">Authenticator code</span>
+              <input type="text" inputMode="numeric" maxLength={6} required value={totpCode}
+                onChange={(e) => setTotpCode(e.target.value.replace(/\D/g, ""))} data-testid="login-totp"
+                placeholder="000000" autoFocus
+                className="mt-2 w-full px-4 py-3 border border-border bg-background rounded-md font-mono-fin tracking-[0.5em] text-center focus:outline-none focus:ring-2 focus:ring-ring" />
+            </label>
+          )}
 
           <button type="submit" disabled={loading} data-testid="login-submit"
             className="mt-6 w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 transition group">
