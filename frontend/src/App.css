@@ -1,0 +1,4 @@
+/* Legacy App.css - styles moved to index.css with design tokens */
+.App {
+  min-height: 100vh;
+}
