@@ -1,0 +1,88 @@
+{
+  "project_name": "FulxerPro",
+  "theme": "light",
+  "archetype": "1_organic_earthy",
+  "mood": "Trustworthy, affluent, secure, grounded, and modern institutional.",
+  "colors": {
+    "background": "#FDFCFB",
+    "surface": "#FFFFFF",
+    "surface_secondary": "#F4F1ED",
+    "primary": "#1C3D34",
+    "primary_hover": "#2B5A4E",
+    "accent": "#C25934",
+    "text_primary": "#1A1A1A",
+    "text_secondary": "#6B6A68",
+    "border": "#E5E0D8",
+    "success": "#2D6A4F",
+    "warning": "#D4A373",
+    "error": "#B91C1C",
+    "chart_palette": [
+      "#1C3D34",
+      "#8A9A86",
+      "#C25934",
+      "#D4A373",
+      "#4A5D54"
+    ]
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Cormorant Garamond, serif",
+      "body": "Manrope, sans-serif",
+      "mono": "JetBrains Mono, monospace"
+    },
+    "scale": {
+      "h1": "text-4xl sm:text-5xl lg:text-6xl tracking-tight leading-none",
+      "h2": "text-2xl sm:text-3xl lg:text-4xl tracking-tight leading-none",
+      "h3": "text-xl sm:text-2xl tracking-tight",
+      "h4": "text-lg sm:text-xl font-medium",
+      "body": "text-base leading-relaxed",
+      "small": "text-sm",
+      "overline": "text-xs uppercase tracking-[0.2em] font-bold"
+    },
+    "rules": "Never use Inter for headings. Keep hierarchy gaps under 2 Tailwind steps. Tightly track large headings. Use JetBrains Mono for transaction IDs and financial numbers."
+  },
+  "spacing_and_layout": {
+    "strategy": "Generous spacing on marketing for luxury feel; dense 'Control Room' grid on dashboard for functional density.",
+    "landing_page": "Wide gaps (gap-12 to gap-24), p-12 to p-24 for sections. Asymmetrical bento grid (grid-cols-1 md:grid-cols-8 lg:grid-cols-12).",
+    "dashboard": "Strict grid hierarchy. Base grid: grid-cols-1 md:grid-cols-3 lg:grid-cols-4. Gap-4 to gap-6. Every pixel utilized.",
+    "border_radius": "rounded-none or max 8px (rounded-lg) for a sharp, institutional feel. Avoid excessive rounding."
+  },
+  "surfaces": {
+    "marketing_header": "Crystal Glass: backdrop-blur-xl bg-white/70, border-b border-black/5, shadow-sm, backdrop-saturate-150.",
+    "dashboard_cards": "Flat solid background, 1px subtle border (border-border), no shadow. Hover: -translate-y-1, shadow-lg, border color darkens.",
+    "modals_kyc": "Solid background, heavy shadow for depth. Do not use glassmorphism on regulated/health/finance data."
+  },
+  "components_instructions": {
+    "marketing_landing": "High impact, storytelling, trust-first. Use text overlays correctly (bg-black/30). Hero image should be premium architecture.",
+    "dashboard_overview": "North-star KPI header (Total Portfolio Value). Modular analytics screen with radial allocation chart and holdings list.",
+    "deposit_withdrawal": "Balance summary first. Segmented toggle for Deposit/Withdraw. Clear fee/timing disclosure before confirmation. Progressive disclosure.",
+    "kyc_verification": "Step indicators with stage titles. Short purpose copy under each step ('This helps us protect your account...'). Contextual help for finance terms.",
+    "transaction_history": "Filterable table. Use standard badges for status (success, pending, failed). JetBrains Mono for monetary values.",
+    "investment_plans": "Marketplace grid. Distinct visual hierarchy for ROI, duration, and min/max. Bold primary CTA for investing.",
+    "admin_panel": "Dense data tables. Grid borders (technical look) to expose the skeleton. Clear approval/rejection actions.",
+    "libraries": {
+      "icons": "@phosphor-icons/react",
+      "charts": "recharts (styled with Tailwind classes via Shadcn)",
+      "motion": "framer-motion (subtle reveals and hovers)",
+      "scrolling": "lenis (smooth momentum scrolling on marketing)"
+    }
+  },
+  "media": {
+    "hero_backgrounds": [
+      "https://images.unsplash.com/photo-1596716999716-544f09b06743?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjY2NzF8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjBnbGFzcyUyMG9mZmljZSUyMGJ1aWxkaW5nJTIwZ29sZGVuJTIwaG91cnxlbnwwfHx8fDE3ODA5OTY2MDJ8MA&ixlib=rb-4.1.0&q=85",
+      "https://images.pexels.com/photos/19381902/pexels-photo-19381902.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    ],
+    "abstract_logos": [
+      "https://images.unsplash.com/photo-1627843240167-b1f9d28f732e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwzfHxhYnN0cmFjdCUyMGdlb21ldHJpYyUyMGxvZ298ZW58MHx8fHwxNzgwOTk2NjEzfDA&ixlib=rb-4.1.0&q=85"
+    ],
+    "portraits_testimonials": [
+      "https://images.unsplash.com/photo-1573497161161-c3e73707e25c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzV8MHwxfHNlYXJjaHwzfHxidXNpbmVzcyUyMHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0fGVufDB8fHx8MTc4MDk5NjYwMnww&ixlib=rb-4.1.0&q=85",
+      "https://images.pexels.com/photos/9623645/pexels-photo-9623645.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    ]
+  },
+  "accessibility": {
+    "contrast": "Ensure minimum 4.5:1 ratio for normal text. APCA guidelines applied.",
+    "testing": "All interactive and key informational elements MUST include a 'data-testid' attribute (e.g., data-testid='login-form-submit-button'). Convention: kebab-case, role-based.",
+    "motion": "Respect prefers-reduced-motion media query. Add aria-hidden='true' to purely decorative animations."
+  }
+}

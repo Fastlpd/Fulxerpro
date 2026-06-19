@@ -39,3 +39,4 @@ This guide explains how to deploy the frontend of your project to an AWS instanc
 ## Backend Deployment
 
 Once the frontend is deployed, you will need to connect it to your API Gateway. Please provide your API Gateway endpoint so that I can provide you with further instructions.
+
